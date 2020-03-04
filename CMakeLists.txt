@@ -55,8 +55,8 @@ endif()
 
 # NetCDF
 set( NETCDF_F90 ON CACHE BOOL "Compile with Fortran NetCDF" )
-find_package( NetCDF REQUIRED )
-include_directories( ${NETCDF_INCLUDE_DIR} )
+find_package( NetCDF REQUIRED COMPONENTS Fortran )
+include_directories( ${NETCDF_INCLUDE_DIRS} )
 
 # fms
 
