@@ -175,6 +175,8 @@
          Iswabsn(:,:,:) = c0
          Sswabsn(:,:,:) = c0
 
+      !$OMP PARALLEL DO PRIVATE(i,n, &
+      !$OMP                     l_print_point)
          do i = 1, nx
 
             l_print_point = .false.
@@ -285,14 +287,11 @@
                enddo
             endif
 
-         enddo
-
       !-----------------------------------------------------------------
       ! Aggregate albedos 
       !-----------------------------------------------------------------
 
-         do n = 1, ncat
-            do i = 1, nx
+            do n = 1, ncat
                
                if (aicen(i,n) > puny) then
                   
@@ -312,10 +311,8 @@
                   snowfrac(i) = snowfrac(i) + snowfracn(i,n)*aicen(i,n)
                
                endif ! aicen > puny
-            enddo  ! i
-         enddo   ! ncat
 
-         do i = 1, nx
+            enddo  ! ncat
 
       !----------------------------------------------------------------
       ! Store grid box mean albedos and fluxes before scaling by aice
@@ -1241,7 +1238,6 @@
       ntd = 0                    ! if nt_fbri /= 0 then use fbri dependency
       if (nt_fbri == 0) ntd = -1 ! otherwise make tracers depend on ice volume
 
-      nt_bgc_S = 0
       if (solve_zsal) then       ! .true. only if tr_brine = .true.
           nt_bgc_S = ntrcr + 1
           ntrcr = ntrcr + nblyr
@@ -1315,7 +1311,6 @@
       nt_bgc_DMS    = 0
       nt_bgc_PON    = 0
       nt_bgc_hum    = 0
-      nt_zbgc_frac  = 0
 
       !-----------------------------------------------------------------
       ! Define array parameters
@@ -1705,6 +1700,7 @@
          endif      ! tr_zaero
 
 !echmod keep trcr indices etc here but move zbgc_frac_init, zbgc_init_frac, tau_ret, tau_rel to icepack
+         nt_zbgc_frac = 0
          if (nbtrcr > 0) then
             nt_zbgc_frac = ntrcr + 1
             ntrcr = ntrcr + nbtrcr

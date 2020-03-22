@@ -19,7 +19,8 @@ in the modules **icedrv\_\*_column.F90**.  Calls into the Icepack interface rout
 are primarily from **icedrv\_step\_mod.F90** but there are others (search the driver code
 for ``intfc``).
 
-Guiding principles for the creation of Icepack include the following: 
+Guiding principles for the creation of Icepack include the following:
+
   - The column physics modules shall be independent of all sea ice model infrastructural
     elements that may vary from model to model.  Examples include input/output, timers,
     references to CPUs or computational tasks, initialization other than that necessary for
@@ -29,3 +30,17 @@ Guiding principles for the creation of Icepack include the following:
   - Any capabilities required by a host sea ice model (e.g. calendar variables, tracer 
     flags, diagnostics) shall be implemented in the driver and passed into or out of the 
     column physics modules via array arguments.
+
+
+Git workflow and Pull Requests
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There is extensive Information for Developers documentation available.
+See https://github.com/CICE-Consortium/About-Us/wiki/Resource-Index#information-for-developers for information on:
+
+  - Contributing to model development
+  - Software development practices guide
+  - git Workflow Guide - including extensive information about the Pull Request 
+    process and requirements
+  - Documentation Workflow Guide
+
