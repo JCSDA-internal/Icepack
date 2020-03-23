@@ -29,6 +29,8 @@ columnphysics/icepack_warnings.F90
 columnphysics/icepack_zbgc.F90
 columnphysics/icepack_zbgc_shared.F90
 columnphysics/icepack_zsalinity.F90
+columnphysics/icepack_fsd.F90
+columnphysics/icepack_wavefracspec.F90
 )
 
 set ( columnphysics_files
