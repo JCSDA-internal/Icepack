@@ -9,9 +9,10 @@
 
 cmake_minimum_required( VERSION 3.3.2 FATAL_ERROR )
 
-project( icepack Fortran )
+project( icepack VERSION 1.2.0 LANGUAGES Fortran )
 
 set( CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH} )
+set( CMAKE_DIRECTORY_LABELS "icepack")
 
 set( ECBUILD_DEFAULT_BUILD_TYPE Release )
 set( ENABLE_OS_TESTS           OFF CACHE BOOL "Disable OS tests" FORCE )
@@ -36,8 +37,6 @@ set( ICEPACK_LINKER_LANGUAGE Fortran )
 # Dependencies
 ################################################################################
 
-# LAPACK
-
 # MPI
 ecbuild_add_option( FEATURE MPI DEFAULT ON
                     DESCRIPTION "Support for MPI distributed parallelism"
@@ -58,16 +57,6 @@ set( NETCDF_F90 ON CACHE BOOL "Compile with Fortran NetCDF" )
 find_package( NetCDF REQUIRED COMPONENTS Fortran )
 include_directories( ${NETCDF_INCLUDE_DIRS} )
 
-# fms
-
-# cvmix
-
-# gsw
-
-# geoKdTree
-
-# icepack_da_hooks
-
 ################################################################################
 # Definitions
 ################################################################################
@@ -76,9 +65,7 @@ include_directories( ${NETCDF_INCLUDE_DIRS} )
 # Export package info
 ################################################################################
 
-set( ICEPACK_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/configuration/driver
-                       ${CMAKE_CURRENT_SOURCE_DIR}/columnphysics
-                       ${CMAKE_Fortran_MODULE_DIRECTORY} )
+set( ICEPACK_INCLUDE_DIRS  ${CMAKE_Fortran_MODULE_DIRECTORY} )
 set( ICEPACK_LIBRARIES icepack )
 
 get_directory_property( ICEPACK_DEFINITIONS COMPILE_DEFINITIONS )
@@ -96,7 +83,7 @@ endforeach()
 
 include( icepack_compiler_flags )
 
-include_directories( ${ICEPACK_INCLUDE_DIRS} ${ICEPACK_EXTRA_INCLUDE_DIRS} )
+include_directories( ${ICEPACK_INCLUDE_DIRS})
 
 add_subdirectory( configuration )
 add_subdirectory( columnphysics )
@@ -106,14 +93,24 @@ list( APPEND icepack_src_files
     ${columnphysics_files}
 )
 
+if (ECBUILD_INSTALL_FORTRAN_MODULES)
+  install (DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR}
+    DESTINATION ${INSTALL_INCLUDE_DIR} )
+endif()
+
+
+################################################################################
+# Library
+################################################################################
 ecbuild_add_library( TARGET   icepack
                      SOURCES  ${icepack_src_files}
                      LIBS     ${LAPACK_LIBRARIES} ${NETCDF_LIBRARIES} 
-                     INCLUDES 
-                     INSTALL_HEADERS LISTED
                      LINKER_LANGUAGE ${ICEPACK_LINKER_LANGUAGE}
                     )
-
+  
+################################################################################
+# Executable
+################################################################################
 set ( icepack_exe_files
     configuration/driver/icedrv_MAIN.F90
 )
